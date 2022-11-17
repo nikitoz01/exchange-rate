@@ -36,15 +36,24 @@ class RatesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        savedInstanceState?.let {
+            firstRate = it.getString("first_rate", "PIZA")
+            secondRate = it.getString("second_rate", "JOPA")
+        }
+
+
         childFragmentManager.setFragmentResultListener("new_rate", this) { key, bundle ->
             val newFirstRate = bundle.getString("new_first_rate")
             val newSecondRate = bundle.getString("new_second_rate")
 
             if (newFirstRate != null) {
                 firstRate = newFirstRate
-            } else if (newSecondRate != null)
+                viewModel.getPairRate(firstRate, secondRate)
+            } else if (newSecondRate != null) {
                 secondRate = newSecondRate
-            viewModel.getPairRate(firstRate, secondRate)
+                viewModel.getPairRate(firstRate, secondRate)
+            }
+
 
         }
     }
@@ -69,10 +78,6 @@ class RatesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        savedInstanceState?.let {
-            firstRate = it.getString("first_rate", "USD")
-            secondRate = it.getString("second_rate", "RUB")
-        }
 
         viewBinding.apply {
 
@@ -116,11 +121,10 @@ class RatesFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
 
-
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-
                 launch {
+                    viewModel.getPairRate(firstRate, secondRate)
                     viewModel.uiState.collect() {
                         when (it) {
                             is ResourceResult.Loading -> {

@@ -16,6 +16,5 @@ rootProject.name = "exchange-rate"
 include (":app")
 include(":core:network")
 include(":core:model")
-include(":feature:rates")
-include(":feature:converter")
 include(":core:data")
+include(":feature:rates")
