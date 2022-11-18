@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
@@ -33,9 +32,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.apply {
 
-            mainToolbar.setOnApplyWindowInsetsListener { view, insets ->
-                view.updatePadding(top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top)
+            if(Build.VERSION_CODES.R < Build.VERSION.SDK_INT) {
+                mainToolbar.setOnApplyWindowInsetsListener { view, insets ->
+                    view.updatePadding(top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top)
                     insets
+                }
             }
 
             setSupportActionBar(mainToolbar)
