@@ -2,17 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/constraintLayoutItemRate">
-
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textViewCurrencyISO"
+        android:id="@+id/textViewCurrentCurrencyISO"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:padding="10dp"
         android:textSize="20sp"
         android:layout_marginStart="10dp"
+        android:textColor="@android:color/black"
         android:text="USD"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline"
@@ -26,12 +25,13 @@
         app:layout_constraintGuide_percent="0.25"/>
 
     <TextView
-        android:id="@+id/textViewCurrencyName"
+        android:id="@+id/textViewCurrentCurrencyName"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:padding="10dp"
         android:textSize="20sp"
         android:text="Доллар США"
+        android:textColor="@android:color/black"
         android:layout_marginEnd="10dp"
         android:maxLines="2"
         android:maxWidth="200dp"

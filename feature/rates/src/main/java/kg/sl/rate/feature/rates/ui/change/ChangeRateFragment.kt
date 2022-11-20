@@ -45,14 +45,10 @@ class ChangeRateFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding.apply {
-
-            textViewCurrentCurrencyISO.text = currentCurrencyISO
-            textViewCurrentCurrencyName.text = CurrencyISO.valueOf(currentCurrencyISO!!).fullName
-
             recyclerViewRatesChange.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = ChangeRateAdapter(::callback)
-        }
+            adapter = ChangeRateAdapter(::callback, CurrencyISO.valueOf(currentCurrencyISO!!))
+            }
         }
     }
 
