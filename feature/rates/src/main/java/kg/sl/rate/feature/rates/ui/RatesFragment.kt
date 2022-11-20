@@ -1,6 +1,7 @@
 package kg.sl.rate.feature.rates.ui
 
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,30 +31,18 @@ class RatesFragment : Fragment() {
     private val viewBinding
         get() = _viewBinding!!
 
-    private var firstRate: String = "USD"
-    private var secondRate: String = "RUB"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        savedInstanceState?.let {
-            firstRate = it.getString("first_rate", "PIZA")
-            secondRate = it.getString("second_rate", "JOPA")
-        }
-
 
         childFragmentManager.setFragmentResultListener("new_rate", this) { key, bundle ->
             val newFirstRate = bundle.getString("new_first_rate")
             val newSecondRate = bundle.getString("new_second_rate")
 
             if (newFirstRate != null) {
-                firstRate = newFirstRate
-                viewModel.getPairRate(firstRate, secondRate)
+                viewModel.updateRate(newFirstRate = newFirstRate)
             } else if (newSecondRate != null) {
-                secondRate = newSecondRate
-                viewModel.getPairRate(firstRate, secondRate)
+                viewModel.updateRate(newSecondRate = newSecondRate)
             }
-
 
         }
     }
@@ -61,8 +50,8 @@ class RatesFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("first_rate", firstRate)
-        outState.putString("second_rate", secondRate)
+        outState.putString("first_rate", viewModel.firstRate)
+        outState.putString("second_rate", viewModel.secondRate)
     }
 
 
@@ -123,8 +112,13 @@ class RatesFragment : Fragment() {
 
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
+                savedInstanceState?.let {
+                    val firstRate = it.getString("first_rate", "USD")
+                    val secondRate = it.getString("second_rate", "RUB")
+                    viewModel.updateRate(firstRate, secondRate)
+                }?: viewModel.updateRate("USD", "RUB")
+
                 launch {
-                    viewModel.getPairRate(firstRate, secondRate)
                     viewModel.uiState.collect() {
                         when (it) {
                             is ResourceResult.Loading -> {
@@ -132,6 +126,11 @@ class RatesFragment : Fragment() {
                             }
                             is ResourceResult.Success -> {
                                 hideProgressBar()
+                                viewBinding.apply {
+                                    convertCurrency(editTextSecondAmountCurrency,
+                                    editTextFirstAmountCurrency.text.toString(),
+                                    RouteConversion.TARGET)
+                                }
                                 showRate(it.data)
                             }
                             is ResourceResult.Error -> {

@@ -22,6 +22,9 @@ class RatesViewModel @Inject constructor(private val repository: NetworkReposito
     val uiState = _uiState.asStateFlow()
 
 
+    var firstRate: String = "USD"
+    var secondRate: String = "RUB"
+
     fun convertCurrency(inputValue: String, routeConversion: RouteConversion): String {
         try {
             val castInputValue = inputValue.toFloat()
@@ -38,13 +41,20 @@ class RatesViewModel @Inject constructor(private val repository: NetworkReposito
         }
     }
 
-    fun getPairRate(baseRate: String, targetRate: String){
-        println("viewmodel $baseRate $targetRate")
+    private fun getPairRate(){
+        println("viewmodel $firstRate $secondRate")
         viewModelScope.launch {
-            repository.getPairRate(baseRate, targetRate)
+            repository.getPairRate(firstRate, secondRate)
                 .collect(){
                     _uiState.emit(it)
                 }
         }
     }
+
+    fun updateRate(newFirstRate: String = firstRate, newSecondRate: String = secondRate) {
+        firstRate = newFirstRate
+        secondRate = newSecondRate
+        getPairRate()
+    }
+
 }

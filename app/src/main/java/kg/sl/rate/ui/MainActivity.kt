@@ -41,9 +41,11 @@ class MainActivity : AppCompatActivity() {
 
             setSupportActionBar(mainToolbar)
         }
-
-        supportFragmentManager.commit {
-            replace(R.id.nav_host_fragment_content_main, RatesFragment())
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                replace(R.id.nav_host_fragment_content_main, RatesFragment())
+            }
         }
     }
 

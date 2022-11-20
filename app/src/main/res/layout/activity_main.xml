@@ -28,6 +28,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mainAppBarLayout">
     </androidx.fragment.app.FragmentContainerView>
+<!--    android:name="kg.sl.rate.feature.rates.ui.RatesFragment"-->
+
 
 <!--    android:name="androidx.navigation.fragment.NavHostFragment"-->
 <!--    app:defaultNavHost="true"-->
